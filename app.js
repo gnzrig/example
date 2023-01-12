@@ -1,3 +1,5 @@
+var isNewGame;
+
 var activePlayer, scores, roundScore;
 
 var diceDom = document.querySelector(".dice");
@@ -5,6 +7,8 @@ var diceDom = document.querySelector(".dice");
 initGame();
 
 function initGame(){
+
+        isNewGame = true;
     // Тоглогчийн ээлжийг хадгалах хувьсагч, нэгдүгээр тоглогчийг 0, хоёрдугаар тоглогчийг 1 гэж тэмдэглэе.
         activePlayer = 0;
 
@@ -39,40 +43,51 @@ function initGame(){
 
 // Шоог шидэх эвент листенэр 
 document.querySelector(".btn-roll").addEventListener('click', function(){
-    var diceNumber = Math.floor(Math.random() * 6) + 1;
 
-    diceDom.style.display = "block";
+    if(isNewGame){
+        var diceNumber = Math.floor(Math.random() * 6) + 1;
 
-    diceDom.src = 'dice-' + diceNumber + '.png';
+        diceDom.style.display = "block";
 
-    // Буусан тоо нь 1 ээс ялгаатай бол идэвхитэй Тоглогчийн ээлжийн оноог нэмэгдүүлнэ.
+        diceDom.src = 'dice-' + diceNumber + '.png';
 
-    if(diceNumber !== 1){
-        roundScore = roundScore + diceNumber;
-        document.getElementById('current-' + activePlayer).textContent = roundScore;
+        // Буусан тоо нь 1 ээс ялгаатай бол идэвхитэй Тоглогчийн ээлжийн оноог нэмэгдүүлнэ.
+
+        if(diceNumber !== 1){
+            roundScore = roundScore + diceNumber;
+            document.getElementById('current-' + activePlayer).textContent = roundScore;
+        } else {
+            switchToNextPlayer();
+        }
     } else {
-        switchToNextPlayer();
+        alert("Game is over. Click new game!!")
     }
 
 })
 
 // HOLD эвент листенэр
 document.querySelector('.btn-hold').addEventListener("click" , function(){
-    scores[activePlayer] = scores[activePlayer] + roundScore;
+    if(isNewGame){
+        scores[activePlayer] = scores[activePlayer] + roundScore;
 
-    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+        document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
 
-    if(scores[activePlayer] >= 100){
-        document.getElementById("name-" + activePlayer).textContent = "Winner !!!"
+        if(scores[activePlayer] >= 100){
+            isNewGame = false;
 
-        document.querySelector('.player-'+activePlayer + '-panel').classList.add('winner');
+            document.getElementById("name-" + activePlayer).textContent = "Winner !!!"
 
-        document.querySelector('.player-'+activePlayer + '-panel').classList.remove('active');
+            document.querySelector('.player-'+activePlayer + '-panel').classList.add('winner');
+
+            document.querySelector('.player-'+activePlayer + '-panel').classList.remove('active');
+        } else {
+            switchToNextPlayer();
+        }
+
+        document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
     } else {
-        switchToNextPlayer();
+        alert("Game is over. Click Start New Game...")
     }
-
-    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
 
 })
 
