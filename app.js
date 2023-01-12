@@ -20,10 +20,31 @@ var diceDom = document.querySelector(".dice");
 
 diceDom.style.display = "none";
 
+
+// Шоог шидэх эвент листенэр 
 document.querySelector(".btn-roll").addEventListener('click', function(){
     var diceNumber = Math.floor(Math.random() * 6) + 1;
 
     diceDom.style.display = "block";
+
     diceDom.src = 'dice-' + diceNumber + '.png';
+
+    // Буусан тоо нь 1 ээс ялгаатай бол идэвхитэй Тоглогчийн ээлжийн оноог нэмэгдүүлнэ.
+
+    if(diceNumber !== 1){
+        roundScore = roundScore + diceNumber;
+        document.getElementById('current-' + activePlayer).textContent = roundScore;
+    } else {
+        roundScore = 0;
+
+        document.getElementById('current-' + activePlayer).textContent = 0;
+
+        activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+
+        document.querySelector('.player-0-panel').classList.toggle('active');
+        document.querySelector('.player-1-panel').classList.toggle('active');
+
+        diceDom.style.display = "none";
+    }
 
 })
